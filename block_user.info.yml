@@ -1,0 +1,8 @@
+name: Block User info
+type: module
+description: 'A custom block to display users info with a view display.'
+package: Block
+core: 8.x
+dependencies:
+  - block
+  - user
