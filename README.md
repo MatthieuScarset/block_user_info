@@ -1,13 +1,15 @@
 Block User
 ==================
 
-This module provides you with a custom block to display a user's information with entity view display.
+This module provides you with a custom block to display a user's information
+with entity view display.
 
 
 Motivation
 ----------
 
-Have you ever needed to display the current user in your sidebar or header? Drupal don't come with a default block for this.
+Have you ever needed to display the current user in your sidebar or header?
+Drupal don't come with a default block for this.
 
 This is why we created the Block User module.
 
@@ -27,7 +29,8 @@ Usage
 
 3. Select a display mode
 
-4. Select a specific user or leave it empty to display the current logged in user.
+4. Select a specific user or leave it empty to display the current logged in
+user.
 
 5. Select a specific user to display (*optional*).
 
@@ -41,7 +44,8 @@ Notes
 
 Need something this module doesn't do yet?
 
-[Open a new issue](https://www.drupal.org/project/issues/2849852?text=&status=Open&priorities=All&categories=3&version=All&component=All) and we'll try fix it ASAP :)
+[Open a new issue](https://www.drupal.org/project/issues/2849852?text=&status=Open&priorities=All&categories=3&version=All&component=All) and we'll
+try fix it ASAP :)
 
 
 Todo
