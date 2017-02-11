@@ -45,12 +45,19 @@ class BLockUserInfo extends BlockBase implements ContainerFactoryPluginInterface
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The factory for configuration objects.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, ConfigFactoryInterface $config_factory, AccountProxyInterface $current_user) {
+  public function __construct(
+    array $configuration,
+    $plugin_id,
+    $plugin_definition,
+    ConfigFactoryInterface $config_factory,
+    EntityTypeManager $entityTypeManager,
+    AccountProxyInterface $current_user
+  ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->configFactory = $config_factory;
-    $this->entityTypeManager = \Drupal::entityTypeManager();
+    $this->entityTypeManager = $entityTypeManager;
     $this->userViewBuilder = $this->entityTypeManager->getViewBuilder('user');
-    
+
     // Get user info.
     $this->currentAccount = $current_user;
     $account = $this->currentAccount;
@@ -58,10 +65,10 @@ class BLockUserInfo extends BlockBase implements ContainerFactoryPluginInterface
     $this->currentUser = $this->entityTypeManager->getStorage('user')->load($uid);
 
     // Get user entity display mode.
-    $this->defaultViewMode = 'full';
+    $this->defaultViewMode = 'default';
     $view_modes = $this->entityTypeManager->getStorage('entity_view_display')->loadByProperties(['targetEntityType' => 'user']);
     $this->userViewModes = [];
-    foreach ($view_modes as $key => $viewmode) {
+    foreach ($view_modes as $viewmode) {
       $machine_name = $viewmode->get('mode');
       $this->userViewModes[$machine_name] = $machine_name;
     }
@@ -76,6 +83,7 @@ class BLockUserInfo extends BlockBase implements ContainerFactoryPluginInterface
       $plugin_id,
       $plugin_definition,
       $container->get('config.factory'),
+      $container->get('entity_type.manager'),
       $container->get('current_user')
     );
   }
@@ -108,7 +116,6 @@ class BLockUserInfo extends BlockBase implements ContainerFactoryPluginInterface
       '#description' => $description . '<br />' . $help,
       '#default_value' => isset($this->configuration['view_mode']) ? $this->configuration['view_mode'] : $this->defaultViewMode,
     );
-    
     $form['userinfo']['target'] = array(
       '#type' => 'checkbox',
       '#title' => $this->t("Select a specific user."),
@@ -118,7 +125,7 @@ class BLockUserInfo extends BlockBase implements ContainerFactoryPluginInterface
     $form['userinfo']['user'] = array(
       '#type' => 'entity_autocomplete',
       '#target_type' => 'user',
-      '#selection_settings' => ['include_anonymous' => FALSE],      
+      '#selection_settings' => ['include_anonymous' => FALSE],
       '#title' => $this->t('Targeted user'),
       '#description' => $this->t('Select which user this block should display.'),
       '#default_value' => $targeted_user ? $targeted_user : NULL,
@@ -137,7 +144,7 @@ class BLockUserInfo extends BlockBase implements ContainerFactoryPluginInterface
   /**
    * {@inheritdoc}
    */
-  public function blockSubmit($form, FormStateInterface $form_state) {  
+  public function blockSubmit($form, FormStateInterface $form_state) {
     $userinfo = $form_state->getValue('userinfo');
     foreach ($userinfo as $key => $value) {
       $this->configuration[$key] = $value;
