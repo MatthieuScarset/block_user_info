@@ -13,7 +13,7 @@ Drupal don't come with a default block for this.
 
 This is why we created the Block User module.
 
-It enables you to render a user view mode, whereever you want on your site.
+It enables you to render a user view mode, wherever you want on your site.
 
 
 Usage
