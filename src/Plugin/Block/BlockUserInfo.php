@@ -35,6 +35,20 @@ class BLockUserInfo extends BlockBase implements ContainerFactoryPluginInterface
   protected $configFactory;
 
   /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
+    return new static(
+      $configuration,
+      $plugin_id,
+      $plugin_definition,
+      $container->get('config.factory'),
+      $container->get('entity_type.manager'),
+      $container->get('current_user')
+    );
+  }
+
+  /**
    * Creates a BLockUserInfo instance.
    *
    * @param array $configuration
@@ -73,20 +87,6 @@ class BLockUserInfo extends BlockBase implements ContainerFactoryPluginInterface
       $machine_name = $viewmode->get('mode');
       $this->userViewModes[$machine_name] = $machine_name;
     }
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
-    return new static(
-      $configuration,
-      $plugin_id,
-      $plugin_definition,
-      $container->get('config.factory'),
-      $container->get('entity_type.manager'),
-      $container->get('current_user')
-    );
   }
 
   /**
