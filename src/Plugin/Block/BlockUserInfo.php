@@ -5,6 +5,7 @@ namespace Drupal\block_user\Plugin\Block;
 use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Entity\EntityTypeManager;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -100,7 +101,7 @@ class BLockUserInfo extends BlockBase implements ContainerFactoryPluginInterface
    */
   public function blockForm($form, FormStateInterface $form_state) {
     $form = parent::blockForm($form, $form_state);
-    $uid = isset($this->configuration['user']) ? $this->configuration['user'] : $this->currentUser;
+    $uid = isset($this->configuration['user']) ? $this->configuration['user'] : $this->currentUser->id();
     $targeted_user = $this->entityTypeManager->getStorage('user')->load($uid);
     $description = $this->t('Select which display mode this block should use.');
     $help = $this->t('You can <a href="/admin/structure/display-modes/view/add/user">add a new display mode here</a> and <a href="/admin/config/people/accounts/display">edit displayed fields there</a>.');
