@@ -3,6 +3,7 @@
 namespace Drupal\block_user\Plugin\Block;
 
 use Drupal\Core\Link;
+use Drupal\Core\Cache\Cache;
 use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\Core\Form\FormStateInterface;
@@ -16,8 +17,11 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *
  * @Block(
  *   id = "block_user_info",
- *   admin_label = @Translation("User Info")
+ *   admin_label = @Translation("User Info Block")
  * )
+ *
+ * @todo Configure block cache.
+ *
  */
 class BLockUserInfo extends BlockBase implements ContainerFactoryPluginInterface {
 
@@ -190,11 +194,31 @@ class BLockUserInfo extends BlockBase implements ContainerFactoryPluginInterface
    */
   public function build() {
     $build = [];
-    $users = $this->getReferencedUsers();
-    $view_mode = isset($this->configuration['view_mode']) ? $this->configuration['view_mode'] : $this->defaultViewMode;
-    foreach ($users as $uid => $user) {
-      $build[] = $this->userViewBuilder->view($user, $view_mode);
+    $users = [];
+
+    // Get correct users.
+    switch ($this->configuration['target']) {
+      case 'current':
+        $users[] = $this->currentUser;
+        break;
+      case 'users':
+        $users[] = $this->getReferencedUsers();
+        break;
+      case 'author':
+        $users[] = $this->getNodeAuthor();
+        break;
     }
+
+    // Get viewmode.
+    $view_mode = isset($this->configuration['view_mode']) ? $this->configuration['view_mode'] : $this->defaultViewMode;
+    
+    // Populate renderable array.
+    foreach ($users as $uid => $user) {
+      if ($user) {
+        $build[] = $this->userViewBuilder->view($user, $view_mode);
+      }
+    }
+
     return $build;
   }
 
@@ -217,6 +241,18 @@ class BLockUserInfo extends BlockBase implements ContainerFactoryPluginInterface
       }
     }
     return $this->entityTypeManager->getStorage('user')->loadMultiple($uids);
+  }
+
+  /**
+   * Load current node's author.
+   *
+   * @return bool|array
+   *   An array a loaded user entity.
+   */
+  protected function getNodeAuthor() {
+    $node = \Drupal::routeMatch()->getParameter('node');
+    $uid = $node ? $node->getOwnerId() : FALSE;
+    return $uid ? $this->entityTypeManager->getStorage('user')->load($uid) : FALSE;
   }
 
 }
