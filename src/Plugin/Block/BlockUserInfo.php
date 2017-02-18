@@ -6,6 +6,7 @@ use Drupal\Core\Link;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Session\AccountProxyInterface;
+use Drupal\Core\Routing\RouteMatch;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Entity\EntityTypeManager;
 use Drupal\Core\Config\ConfigFactoryInterface;
@@ -26,18 +27,60 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class BLockUserInfo extends BlockBase implements ContainerFactoryPluginInterface {
 
   /**
-   * The targeted user.
-   *
-   * @var string|array
-   */
-  protected $user;
-
-  /**
    * Stores the configuration factory.
    *
    * @var \Drupal\Core\Config\ConfigFactoryInterface
    */
   protected $configFactory;
+
+  /**
+   * Stores an entity type manager instance.
+   *
+   * @var \Drupal\Core\Entity\EntityTypeManager;
+   */
+  protected $entityTypeManager;
+  
+  /**
+   * Stores an user view builder instance.
+   *
+   * @var \Drupal\Core\Entity\EntityViewBuilderInterface;
+   */
+  protected $userViewBuilder;
+
+  /**
+   * Stores the current request.
+   *
+   * @var \Drupal\Core\Entity\EntityViewBuilderInterface;
+   */
+  protected $routeMatch;
+
+  /**
+   * Stores the current logged in user or anonymous account.
+   *
+   * @var \Drupal\Core\Session\AccountProxyInterface.
+   */
+  protected $currentAccount;
+
+  /**
+   * Stores the current user.
+   *
+   * @var \Drupal\user\Entity\User
+   */
+  protected $currentUser;
+
+  /**
+   * Stores the default view mode to be used in render array.
+   *
+   * @var string
+   */
+  protected $defaultViewMode = 'compact';
+ 
+  /**
+   * Stores a list of existing view mode for user entity.
+   *
+   * @var array
+   */
+  protected $userViewModes;
 
   /**
    * {@inheritdoc}
@@ -49,7 +92,8 @@ class BLockUserInfo extends BlockBase implements ContainerFactoryPluginInterface
       $plugin_definition,
       $container->get('config.factory'),
       $container->get('entity_type.manager'),
-      $container->get('current_user')
+      $container->get('current_user'),
+      $container->get('current_route_match')
     );
   }
 
@@ -71,19 +115,24 @@ class BLockUserInfo extends BlockBase implements ContainerFactoryPluginInterface
     $plugin_definition,
     ConfigFactoryInterface $config_factory,
     EntityTypeManager $entityTypeManager,
-    AccountProxyInterface $current_account
+    AccountProxyInterface $currentAccount,
+    RouteMatch $routeMatch
   ) {
+    // Get default values.
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->configFactory = $config_factory;
     $this->entityTypeManager = $entityTypeManager;
     $this->userViewBuilder = $this->entityTypeManager->getViewBuilder('user');
+    $this->routeMatch = $routeMatch;
+
+    // Get current node.
+    $this->currentNode = $this->routeMatch->getParameter('node');
 
     // Get user info.
-    $this->currentAccount = $current_account;
+    $this->currentAccount = $currentAccount;
     $this->currentUser = $this->entityTypeManager->getStorage('user')->load($this->currentAccount->id());
 
     // Get user entity display mode.
-    $this->defaultViewMode = 'default';
     $view_modes = $this->entityTypeManager->getStorage('entity_view_display')->loadByProperties(['targetEntityType' => 'user']);
     $this->userViewModes = [];
     foreach ($view_modes as $viewmode) {
@@ -249,7 +298,7 @@ class BLockUserInfo extends BlockBase implements ContainerFactoryPluginInterface
    *   An array a loaded user entity.
    */
   protected function getNodeAuthor() {
-    $node = \Drupal::routeMatch()->getParameter('node');
+    $node = $this->currentNode;
     $uid = $node ? $node->getOwnerId() : FALSE;
     return $uid ? $this->entityTypeManager->getStorage('user')->load($uid) : FALSE;
   }
