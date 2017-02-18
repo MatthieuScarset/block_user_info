@@ -321,7 +321,7 @@ class BlockUserInfo extends BlockBase implements ContainerFactoryPluginInterface
    * @param array $build
    *   A renderable array passed by reference.
    */
-  protected function setCacheContexts(&$build) {
+  protected function setCacheContexts(array &$build) {
     switch ($this->configuration['target']) {
       case 'author':
         $build['#cache']['contexts'][] = 'url.path';
@@ -339,7 +339,7 @@ class BlockUserInfo extends BlockBase implements ContainerFactoryPluginInterface
    * @param array $build
    *   A renderable array passed by reference.
    */
-  protected function setCacheTags(&$build) {
+  protected function setCacheTags(array &$build) {
     switch ($this->configuration['target']) {
       case 'author':
         $nid = (NULL != $this->currentNode) ? $this->currentNode->id() : FALSE;
