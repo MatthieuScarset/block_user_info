@@ -18,8 +18,7 @@ It enables you to render a user view mode, wherever you want on your site.
 
 Usage
 -----
-[![Video demonstration](https://lh3.googleusercontent.com/ct4PJ-RNU_q8o-oo54ibz2zdpQyxOI0dMqZk_O5ykZ5vnYmzJlaZ6-aSfzqadGkwpsZtE7oXFL1WQeUCLpuK6e7IgnSS04-lhhvka4SFuR24ywmkawCUKZ3kmFgcGUaq70xbzEdRaoolOPsX11cNjOfsVjFxp3ymEsTuszNNsFCmqZCqxGpjO5TkQA3Cyu1sbDR4tCx-DZ3bTPwkF0ABhAf6khxsjDIFTguNWsaeIOZMZkpgdob2WfPV66VKPIRbrSop3nqicWRbGcFhr0Hy5p8qkxrIbz19DctJySUM9ifSgvN8UyIQRIwE1BTXQLK8h0amXVrTZSKwbtzUPw9L3Nay-VK9efIzIiq0GYyjsCK0H0cO9I58rhG7jkhyaOzCGZNcBckj_iSk0cWYlqwx6JtHWrWWQq8W9fXVpcB41UJU6Ma-QW7T_GUQAurONFSj5sTQUHr5rS8sTXvQykGKIEZMaKh6kSupPcIWuqD9pK5CIl8GmGt3uBuv3TwwJ0yuoUzhiT2iggiC0-cCTcLTWP_2P-R6MrfHIBHbqs7CtIaccVoafqntvWBnYR43lHIn3vxaTsbalmvHcWfVZPopnIlIavU-adNC3yXXAF1dgOcJRknciKli_HHbofVb21i67IwPdn97bNr95bK06ZlXAmcfjIqqKnrcLyikJlWwNbI=w819-h450-no)](https://youtu.be/RFyGzfkf1jM)
-
+[![Video demonstration](https://goo.gl/B7dDob)](https://youtu.be/RFyGzfkf1jM)
 
 1. Install the module.
 
@@ -44,8 +43,7 @@ Notes
 
 Need something this module doesn't do yet?
 
-[Open a new issue](https://www.drupal.org/project/issues/2849852?text=&status=Open&priorities=All&categories=3&version=All&component=All) and we'll
-try fix it ASAP :)
+[Open a new issue](https://goo.gl/WoSxAi) and we'll try fix it ASAP :)
 
 
 Todo

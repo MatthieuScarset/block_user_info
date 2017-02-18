@@ -3,7 +3,6 @@
 namespace Drupal\block_user\Plugin\Block;
 
 use Drupal\Core\Link;
-use Drupal\Core\Cache\Cache;
 use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\Core\Routing\CurrentRouteMatch;
@@ -22,7 +21,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * )
  *
  * @todo Configure block cache.
- *
  */
 class BlockUserInfo extends BlockBase implements ContainerFactoryPluginInterface {
 
@@ -36,28 +34,28 @@ class BlockUserInfo extends BlockBase implements ContainerFactoryPluginInterface
   /**
    * Stores an entity type manager instance.
    *
-   * @var \Drupal\Core\Entity\EntityTypeManager;
+   * @var \Drupal\Core\Entity\EntityTypeManager
    */
   protected $entityTypeManager;
-  
+
   /**
    * Stores an user view builder instance.
    *
-   * @var \Drupal\Core\Entity\EntityViewBuilderInterface;
+   * @var \Drupal\Core\Entity\EntityViewBuilderInterface
    */
   protected $userViewBuilder;
 
   /**
    * Stores the current request.
    *
-   * @var \Drupal\Core\Routing\CurrentRouteMatch;
+   * @var \Drupal\Core\Routing\CurrentRouteMatch
    */
   protected $routeMatch;
 
   /**
    * Stores the current logged in user or anonymous account.
    *
-   * @var \Drupal\Core\Session\AccountProxyInterface.
+   * @var \Drupal\Core\Session\AccountProxyInterface
    */
   protected $currentAccount;
 
@@ -74,7 +72,7 @@ class BlockUserInfo extends BlockBase implements ContainerFactoryPluginInterface
    * @var string
    */
   protected $defaultViewMode = 'compact';
- 
+
   /**
    * Stores a list of existing view mode for user entity.
    *
@@ -162,7 +160,7 @@ class BlockUserInfo extends BlockBase implements ContainerFactoryPluginInterface
    */
   public function blockForm($form, FormStateInterface $form_state) {
     $form = parent::blockForm($form, $form_state);
-    
+
     // Prepare form texts.
     $url_add_view_mode = Link::createFromRoute(
       $this->t('add a new view mode here'),
@@ -174,8 +172,8 @@ class BlockUserInfo extends BlockBase implements ContainerFactoryPluginInterface
       'entity.entity_view_display.user.default'
     );
     $description = $this->t('Select which display mode this block should use.');
-    $help = $this->t('You can ') . $url_add_view_mode->toString() . ' ' . $this->t('and') . ' ' . $url_account_display->toString();
-    
+    $help = $this->t('You can') . ' ' . $url_add_view_mode->toString() . ' ' . $this->t('and') . ' ' . $url_account_display->toString();
+
     // Load referenced users entities.
     $user_default_value = $this->getReferencedUsers();
 
@@ -250,15 +248,17 @@ class BlockUserInfo extends BlockBase implements ContainerFactoryPluginInterface
   public function build() {
     $build = [];
     $users = [];
-    
+
     // Get correct users.
     switch ($this->configuration['target']) {
       case 'current':
         $users[] = $this->currentUser;
         break;
+
       case 'author':
         $users[] = $this->getNodeAuthor();
         break;
+
       case 'users':
         // Replace $users array.
         $users = $this->getReferencedUsers();
@@ -267,7 +267,7 @@ class BlockUserInfo extends BlockBase implements ContainerFactoryPluginInterface
 
     // Get viewmode.
     $view_mode = isset($this->configuration['view_mode']) ? $this->configuration['view_mode'] : $this->defaultViewMode;
-    
+
     // Populate renderable array.
     foreach ($users as $user) {
       if ($user) {
