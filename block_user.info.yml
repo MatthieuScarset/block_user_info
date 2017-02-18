@@ -1,8 +1,8 @@
-name: Block User info
+name: User info Block
 type: module
 description: 'A custom block to display users info with a view display.'
 package: Block
 core: 8.x
 dependencies:
-  - block
-  - user
+  - drupal:block
+  - drupal:user
