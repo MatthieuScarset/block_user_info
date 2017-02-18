@@ -275,6 +275,10 @@ class BlockUserInfo extends BlockBase implements ContainerFactoryPluginInterface
       }
     }
 
+    // Set correct cache contexts and tags.
+    $this->setCacheContexts($build);
+    $this->setCacheTags($build);
+
     return $build;
   }
 
@@ -309,6 +313,48 @@ class BlockUserInfo extends BlockBase implements ContainerFactoryPluginInterface
     $node = $this->currentNode;
     $uid = $node ? $node->getOwnerId() : FALSE;
     return $uid ? $this->entityTypeManager->getStorage('user')->load($uid) : FALSE;
+  }
+
+  /**
+   * Set correct cache contexts.
+   *
+   * @param array $build
+   *   A renderable array passed by reference.
+   */
+  protected function setCacheContexts(&$build) {
+    switch ($this->configuration['target']) {
+      case 'author':
+        $build['#cache']['contexts'][] = 'url.path';
+        break;
+
+      default:
+        $build['#cache']['contexts'][] = 'user';
+        break;
+    }
+  }
+
+  /**
+   * Set correct cache tags.
+   *
+   * @param array $build
+   *   A renderable array passed by reference.
+   */
+  protected function setCacheTags(&$build) {
+    switch ($this->configuration['target']) {
+      case 'author':
+        $nid = (NULL != $this->currentNode) ? $this->currentNode->id() : FALSE;
+        if ($nid) {
+          $build['#cache']['tags'][] = 'node:'.$nid;
+        }
+        break;
+
+      default:
+        $uid = (NULL != $this->currentUser) ? $this->currentUser->id() : FALSE;
+        if ($uid) {
+          $build['#cache']['tags'] = ['user:'.$uid];
+        }
+        break;
+    }
   }
 
 }
