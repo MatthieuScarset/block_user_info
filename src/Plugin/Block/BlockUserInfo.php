@@ -19,8 +19,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *   id = "block_user_info",
  *   admin_label = @Translation("User Info Block")
  * )
- *
- * @todo Configure block cache.
  */
 class BlockUserInfo extends BlockBase implements ContainerFactoryPluginInterface {
 
@@ -51,6 +49,13 @@ class BlockUserInfo extends BlockBase implements ContainerFactoryPluginInterface
    * @var \Drupal\Core\Routing\CurrentRouteMatch
    */
   protected $routeMatch;
+
+  /**
+   * Stores the current node.
+   *
+   * @var \Drupal\node\Entity\Node
+   */
+  protected $currentNode;
 
   /**
    * Stores the current logged in user or anonymous account.
