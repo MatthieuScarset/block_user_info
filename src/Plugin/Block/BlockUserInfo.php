@@ -228,7 +228,7 @@ class BlockUserInfo extends BlockBase implements ContainerFactoryPluginInterface
       '#type' => 'textfield',
       '#title' => $this->t('Custom CSS class'),
       '#description' => $this->t('Use this field to add extra CSS classes to this block.'),
-      '#default_value' =>  isset($this->configuration['class']) ? $this->configuration['class'] : NULL,
+      '#default_value' => isset($this->configuration['class']) ? $this->configuration['class'] : NULL,
     );
     return $form;
   }
@@ -251,7 +251,7 @@ class BlockUserInfo extends BlockBase implements ContainerFactoryPluginInterface
     $extra = $form_state->getValue('extra');
     foreach ($extra as $key => $value) {
       $this->configuration[$key] = $value;
-    }    
+    }
   }
 
   /**
@@ -293,7 +293,7 @@ class BlockUserInfo extends BlockBase implements ContainerFactoryPluginInterface
 
     // Add extra CSS class.
     if (isset($this->configuration['class'])) {
-      $build['#attributes']['class'][] =  $this->configuration['class'];
+      $build['#attributes']['class'][] = $this->configuration['class'];
     }
 
     return $build;
