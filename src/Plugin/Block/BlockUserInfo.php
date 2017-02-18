@@ -224,6 +224,12 @@ class BlockUserInfo extends BlockBase implements ContainerFactoryPluginInterface
         ),
       ),
     );
+    $form['extra']['class'] = array(
+      '#type' => 'textfield',
+      '#title' => $this->t('Custom CSS class'),
+      '#description' => $this->t('Use this field to add extra CSS classes to this block.'),
+      '#default_value' =>  isset($this->configuration['class']) ? $this->configuration['class'] : NULL,
+    );
     return $form;
   }
 
@@ -231,15 +237,21 @@ class BlockUserInfo extends BlockBase implements ContainerFactoryPluginInterface
    * {@inheritdoc}
    */
   public function blockSubmit($form, FormStateInterface $form_state) {
+    // Save configurations keys/values.
     $userinfo = $form_state->getValue('userinfo');
     // Empty the entity_autcomplete field.
     if (isset($userinfo['target']) && $userinfo['target'] != 'users') {
       $userinfo['user'] = NULL;
     }
-    // Save configurations keys/values.
     foreach ($userinfo as $key => $value) {
       $this->configuration[$key] = $value;
     }
+
+    // Save extra configurations keys/values.
+    $extra = $form_state->getValue('extra');
+    foreach ($extra as $key => $value) {
+      $this->configuration[$key] = $value;
+    }    
   }
 
   /**
@@ -278,6 +290,11 @@ class BlockUserInfo extends BlockBase implements ContainerFactoryPluginInterface
     // Set correct cache contexts and tags.
     $this->setCacheContexts($build);
     $this->setCacheTags($build);
+
+    // Add extra CSS class.
+    if (isset($this->configuration['class'])) {
+      $build['#attributes']['class'][] =  $this->configuration['class'];
+    }
 
     return $build;
   }
