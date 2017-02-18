@@ -28,8 +28,10 @@ Usage
 
 3. Select a display mode
 
-4. Select a specific user or leave it empty to display the current logged in
-user.
+4. Select which user to display:
+  * The current logged in user
+  * The current node's author
+  * A list of specific user(s) (selected by username)
 
 5. Select a specific user to display (*optional*).
 
@@ -49,5 +51,4 @@ Need something this module doesn't do yet?
 Todo
 ----
 
-- Add the possibility to select multiple users.
-- Add the possibility to edit cache settings per Block User.
+- Add the possibility **to select users by roles**.
