@@ -344,14 +344,14 @@ class BlockUserInfo extends BlockBase implements ContainerFactoryPluginInterface
       case 'author':
         $nid = (NULL != $this->currentNode) ? $this->currentNode->id() : FALSE;
         if ($nid) {
-          $build['#cache']['tags'][] = 'node:'.$nid;
+          $build['#cache']['tags'][] = 'node:' . $nid;
         }
         break;
 
       default:
         $uid = (NULL != $this->currentUser) ? $this->currentUser->id() : FALSE;
         if ($uid) {
-          $build['#cache']['tags'] = ['user:'.$uid];
+          $build['#cache']['tags'] = ['user:' . $uid];
         }
         break;
     }
