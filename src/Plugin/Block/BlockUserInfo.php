@@ -250,22 +250,24 @@ class BlockUserInfo extends BlockBase implements ContainerFactoryPluginInterface
   public function build() {
     $build = [];
     $users = [];
-
+    
     // Get correct users.
     switch ($this->configuration['target']) {
       case 'current':
         $users[] = $this->currentUser;
         break;
-      case 'users':
-        $users[] = $this->getReferencedUsers();
-        break;
       case 'author':
         $users[] = $this->getNodeAuthor();
+        break;
+      case 'users':
+        // Replace $users array.
+        $users = $this->getReferencedUsers();
         break;
     }
 
     // Get viewmode.
     $view_mode = isset($this->configuration['view_mode']) ? $this->configuration['view_mode'] : $this->defaultViewMode;
+    
     // Populate renderable array.
     foreach ($users as $user) {
       if ($user) {
