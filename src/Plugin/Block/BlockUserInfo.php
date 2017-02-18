@@ -6,7 +6,7 @@ use Drupal\Core\Link;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Session\AccountProxyInterface;
-use Drupal\Core\Routing\RouteMatch;
+use Drupal\Core\Routing\CurrentRouteMatch;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Entity\EntityTypeManager;
 use Drupal\Core\Config\ConfigFactoryInterface;
@@ -50,7 +50,7 @@ class BlockUserInfo extends BlockBase implements ContainerFactoryPluginInterface
   /**
    * Stores the current request.
    *
-   * @var \Drupal\Core\Entity\EntityViewBuilderInterface;
+   * @var \Drupal\Core\Routing\CurrentRouteMatch;
    */
   protected $routeMatch;
 
@@ -108,31 +108,37 @@ class BlockUserInfo extends BlockBase implements ContainerFactoryPluginInterface
    *   The plugin implementation definition.
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The factory for configuration objects.
+   * @param \Drupal\Core\Entity\EntityTypeManager $entity_type_manager
+   *   An instance of the entity type manager.
+   * @param \Drupal\Core\Session\AccountProxyInterface $current_account
+   *   An instance of the current logged in user or anonymous account.
+   * @param \Drupal\Core\Routing\CurrentRouteMatch $current_route_match
+   *   The current request.
    */
   public function __construct(
     array $configuration,
     $plugin_id,
     $plugin_definition,
     ConfigFactoryInterface $config_factory,
-    EntityTypeManager $entityTypeManager,
-    AccountProxyInterface $currentAccount,
-    RouteMatch $routeMatch
+    EntityTypeManager $entity_type_manager,
+    AccountProxyInterface $current_account,
+    CurrentRouteMatch $current_route_match
   ) {
     // Get default values.
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->configFactory = $config_factory;
-    $this->entityTypeManager = $entityTypeManager;
-    $this->userViewBuilder = $this->entityTypeManager->getViewBuilder('user');
-    $this->routeMatch = $routeMatch;
+    $this->entityTypeManager = $entity_type_manager;
 
     // Get current node.
+    $this->routeMatch = $current_route_match;
     $this->currentNode = $this->routeMatch->getParameter('node');
 
     // Get user info.
-    $this->currentAccount = $currentAccount;
+    $this->currentAccount = $current_account;
     $this->currentUser = $this->entityTypeManager->getStorage('user')->load($this->currentAccount->id());
 
     // Get user entity display mode.
+    $this->userViewBuilder = $this->entityTypeManager->getViewBuilder('user');
     $view_modes = $this->entityTypeManager->getStorage('entity_view_display')->loadByProperties(['targetEntityType' => 'user']);
     $this->userViewModes = [];
     foreach ($view_modes as $viewmode) {
