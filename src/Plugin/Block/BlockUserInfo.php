@@ -24,7 +24,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * @todo Configure block cache.
  *
  */
-class BLockUserInfo extends BlockBase implements ContainerFactoryPluginInterface {
+class BlockUserInfo extends BlockBase implements ContainerFactoryPluginInterface {
 
   /**
    * Stores the configuration factory.
