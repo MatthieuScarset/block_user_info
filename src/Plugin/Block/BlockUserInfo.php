@@ -192,7 +192,7 @@ class BLockUserInfo extends BlockBase implements ContainerFactoryPluginInterface
     $build = [];
     $users = $this->getReferencedUsers();
     $view_mode = isset($this->configuration['view_mode']) ? $this->configuration['view_mode'] : $this->defaultViewMode;
-    foreach ($users as $uid => $user) {
+    foreach ($users as $user) {
       $build[] = $this->userViewBuilder->view($user, $view_mode);
     }
     return $build;
