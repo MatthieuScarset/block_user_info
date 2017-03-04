@@ -1,6 +1,8 @@
 Block User
 ==================
 
+[![Build Status](https://travis-ci.org/MatthieuScarset/block_user_info.svg?branch=master)](https://travis-ci.org/MatthieuScarset/block_user_info)
+
 This module provides you with a custom block to display a user's information
 with entity view display.
 
