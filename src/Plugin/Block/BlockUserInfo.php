@@ -8,6 +8,7 @@ use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\Core\Routing\CurrentRouteMatch;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Entity\EntityTypeManager;
+use Drupal\Core\Entity\EntityDisplayRepositoryInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -93,6 +94,7 @@ class BlockUserInfo extends BlockBase implements ContainerFactoryPluginInterface
       $plugin_id,
       $plugin_definition,
       $container->get('entity_type.manager'),
+      $container->get('entity_display.repository'),
       $container->get('current_user'),
       $container->get('current_route_match')
     );
@@ -119,13 +121,18 @@ class BlockUserInfo extends BlockBase implements ContainerFactoryPluginInterface
     $plugin_id,
     $plugin_definition,
     EntityTypeManager $entity_type_manager,
+    EntityDisplayRepositoryInterface $entity_display_repository,
     AccountProxyInterface $current_account,
     CurrentRouteMatch $current_route_match
   ) {
     // Get default values.
     parent::__construct($configuration, $plugin_id, $plugin_definition);
+    
+    // Get user entity tools.
     $this->entityTypeManager = $entity_type_manager;
     $this->userStorage = $entity_type_manager->getStorage('user');
+    $this->userViewBuilder = $this->entityTypeManager->getViewBuilder('user');
+    $this->userViewModes = $entity_display_repository->getViewModeOptions('user');
 
     // Get current node.
     $this->routeMatch = $current_route_match;
@@ -134,15 +141,6 @@ class BlockUserInfo extends BlockBase implements ContainerFactoryPluginInterface
     // Get user info.
     $this->currentAccount = $current_account;
     $this->currentUser = $this->userStorage->load($this->currentAccount->id());
-
-    // Get user entity display mode.
-    $this->userViewBuilder = $this->entityTypeManager->getViewBuilder('user');
-    $view_modes = $this->entityTypeManager->getStorage('entity_view_display')->loadByProperties(['targetEntityType' => 'user']);
-    $this->userViewModes = [];
-    foreach ($view_modes as $viewmode) {
-      $machine_name = $viewmode->get('mode');
-      $this->userViewModes[$machine_name] = $machine_name;
-    }
   }
 
   /**
