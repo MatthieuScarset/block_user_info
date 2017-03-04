@@ -12,7 +12,7 @@ php:
 env:
   global:
     - MODULE_NAME='block_user_info'
-    - DRUPAL_REPO='git://matthieuscarset@git.drupal.org:project/block_user_info.git'
+    - DRUPAL_REPO='git://git.drupal.org/project/drupal.git'
     - DRUPAL_VERSION='8.2.x'
     - PHPCS_VERSION='2.7.*'
     - CODER_VERSION='8.2.9'
