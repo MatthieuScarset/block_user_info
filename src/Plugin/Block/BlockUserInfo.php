@@ -29,6 +29,13 @@ class BlockUserInfo extends BlockBase implements ContainerFactoryPluginInterface
   protected $entityTypeManager;
 
   /**
+   * The entity storage for User entity type.
+   *
+   * @var \Drupal\Core\Entity\EntityStorageInterface;
+   */
+  protected $userStorage;
+
+  /**
    * Stores an user view builder instance.
    *
    * @var \Drupal\Core\Entity\EntityViewBuilderInterface
@@ -118,6 +125,7 @@ class BlockUserInfo extends BlockBase implements ContainerFactoryPluginInterface
     // Get default values.
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->entityTypeManager = $entity_type_manager;
+    $this->userStorage = $entity_type_manager->getStorage('user');
 
     // Get current node.
     $this->routeMatch = $current_route_match;
@@ -125,7 +133,7 @@ class BlockUserInfo extends BlockBase implements ContainerFactoryPluginInterface
 
     // Get user info.
     $this->currentAccount = $current_account;
-    $this->currentUser = $this->entityTypeManager->getStorage('user')->load($this->currentAccount->id());
+    $this->currentUser = $this->userStorage->load($this->currentAccount->id());
 
     // Get user entity display mode.
     $this->userViewBuilder = $this->entityTypeManager->getViewBuilder('user');
@@ -309,7 +317,7 @@ class BlockUserInfo extends BlockBase implements ContainerFactoryPluginInterface
         }
       }
     }
-    return $this->entityTypeManager->getStorage('user')->loadMultiple($uids);
+    return $this->userStorage->loadMultiple($uids);
   }
 
   /**
@@ -321,7 +329,7 @@ class BlockUserInfo extends BlockBase implements ContainerFactoryPluginInterface
   protected function getNodeAuthor() {
     $node = $this->currentNode;
     $uid = $node ? $node->getOwnerId() : FALSE;
-    return $uid ? $this->entityTypeManager->getStorage('user')->load($uid) : FALSE;
+    return $uid ? $this->userStorage->load($uid) : FALSE;
   }
 
   /**
