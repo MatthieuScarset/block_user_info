@@ -1,5 +1,6 @@
-block_user develop
+block_user_info
 ==================
+#b26894d: Improve performance with "entity_display.repository" dependency injection
 #1ecec53: Add cache contexts and tags
 #61b0ac6: Add option to display the current node's author
 #65510cd: Add multiple users selection
