@@ -8,7 +8,6 @@ use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\Core\Routing\CurrentRouteMatch;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Entity\EntityTypeManager;
-use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -21,13 +20,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * )
  */
 class BlockUserInfo extends BlockBase implements ContainerFactoryPluginInterface {
-
-  /**
-   * Stores the configuration factory.
-   *
-   * @var \Drupal\Core\Config\ConfigFactoryInterface
-   */
-  protected $configFactory;
 
   /**
    * Stores an entity type manager instance.
@@ -93,7 +85,6 @@ class BlockUserInfo extends BlockBase implements ContainerFactoryPluginInterface
       $configuration,
       $plugin_id,
       $plugin_definition,
-      $container->get('config.factory'),
       $container->get('entity_type.manager'),
       $container->get('current_user'),
       $container->get('current_route_match')
@@ -108,9 +99,7 @@ class BlockUserInfo extends BlockBase implements ContainerFactoryPluginInterface
    * @param string $plugin_id
    *   The plugin_id for the plugin instance.
    * @param mixed $plugin_definition
-   *   The plugin implementation definition.
-   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
-   *   The factory for configuration objects.
+   *   The plugin implementation definition.  
    * @param \Drupal\Core\Entity\EntityTypeManager $entity_type_manager
    *   An instance of the entity type manager.
    * @param \Drupal\Core\Session\AccountProxyInterface $current_account
@@ -122,14 +111,12 @@ class BlockUserInfo extends BlockBase implements ContainerFactoryPluginInterface
     array $configuration,
     $plugin_id,
     $plugin_definition,
-    ConfigFactoryInterface $config_factory,
     EntityTypeManager $entity_type_manager,
     AccountProxyInterface $current_account,
     CurrentRouteMatch $current_route_match
   ) {
     // Get default values.
     parent::__construct($configuration, $plugin_id, $plugin_definition);
-    $this->configFactory = $config_factory;
     $this->entityTypeManager = $entity_type_manager;
 
     // Get current node.
